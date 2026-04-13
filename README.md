@@ -21,10 +21,10 @@ Proyek ini menggabungkan tiga tugas utama menjadi satu alur antarmuka yang dinam
    - Implementasi logika *dropdown* yang bergantung pada pilihan sebelumnya (Kategori Produk ➔ Merk).
    - Opsi merk secara otomatis menyesuaikan berdasarkan jenis produk yang dipilih oleh pengguna.
 
-## Teknologi yang Digunakan
+##  Yang Digunakan
 
 * **HTML5:** Struktur dasar dan elemen form interaktif.
 * **CSS3:** *Styling* antarmuka, *layouting* yang responsif, dan animasi transisi antar halaman.
 * **Vanilla JavaScript (ES6):** Manipulasi DOM, validasi form, dan logika simulasi *database* menggunakan Objek JS untuk *cascading dropdown*.
 
-
+Akses Web di: https://fathurdxs.github.io/Formulir_Mahasiswa/
