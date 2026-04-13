@@ -1,6 +1,6 @@
-# Tugas Pemrograman Web Dinamis
+# Tugas Pemrograman Web
 
-Repositori ini berisi implementasi antarmuka web interaktif menggunakan antarmuka halaman tunggal (*Single Page Application* sederhana) yang dibangun dengan HTML, CSS, dan Vanilla JavaScript. Proyek ini dibuat untuk memenuhi tugas pemrograman web.
+Di repository ini berisi implementasi antarmuka web interaktif menggunakan antarmuka halaman tunggal (*Single Page Application* sederhana) yang dibangun dengan HTML, CSS, dan Vanilla JavaScript. Proyek ini dibuat untuk memenuhi tugas pemrograman web.
 
 **Muhammad Fathur Aziz**
 
