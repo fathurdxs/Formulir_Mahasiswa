@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tugas Web Dinamis - Muhammad Fathur Aziz</title>
+    <style>
+        :root {
+            --primary: #007bff;
+            --success: #28a745;
+            --bg: #f8f9fa;
+        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg); padding: 40px 20px; color: #333; }
+        .container { max-width: 700px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        
+        h2 { border-left: 5px solid var(--primary); padding-left: 15px; margin-bottom: 25px; color: #222; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 14px; }
+        
+        input, select { 
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; 
+            box-sizing: border-box; transition: border 0.3s;
+        }
+        input:focus, select:focus { border-color: var(--primary); outline: none; }
+        
+        button { 
+            width: 100%; padding: 12px; border: none; border-radius: 6px; 
+            font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+        .btn-next { background-color: var(--primary); color: white; }
+        .btn-next:hover { background-color: #0056b3; }
+        .btn-search { background-color: var(--success); color: white; margin-top: 10px; }
+        
+        .result-box { 
+            margin-top: 20px; padding: 15px; background: #e9f7ef; 
+            border: 1px solid #c3e6cb; border-radius: 6px; display: none; 
+        }
+
+        /* Navigasi Halaman */
+        .page { display: none; animation: fadeIn 0.5s; }
+        .page.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-indicator { margin-bottom: 30px; display: flex; justify-content: space-between; font-size: 12px; color: #888; }
+        .step-indicator span.active { color: var(--primary); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="step-indicator">
+        <span id="step1-label" class="active">1. REGISTRASI</span>
+        <span id="step2-label">2. KODE POS</span>
+        <span id="step3-label">3. DROPDOWN</span>
+    </div>
+
+    <div id="page1" class="page active">
+        <h2>1. Form Registrasi Mahasiswa</h2>
+        <div class="form-group">
+            <label>Nama Mahasiswa:</label>
+            <input type="text" id="regNama" list="listNama" placeholder="Ketik nama...">
+            <datalist id="listNama">
+                <option value="Muhammad Fathur Aziz">
+                <option value="Jason Susanto">
+                <option value="Delwyn Sukamto">
+                <option value="Rizky Ridho">
+            </datalist>
+        </div>
+        <div class="form-group">
+            <label>NRP:</label>
+            <input type="text" id="regNrp" placeholder="Contoh: 505xxxxxxx">
+        </div>
+        <div class="form-group">
+            <label>Mata Kuliah:</label>
+            <input type="text" id="regMatkul" placeholder="Nama Mata Kuliah">
+        </div>
+        <div class="form-group">
+            <label>Dosen:</label>
+            <input type="text" id="regDosen" placeholder="Nama Dosen">
+        </div>
+        <button class="btn-next" onclick="keHalaman(2)">Simpan & Lanjut ke Kode Pos</button>
+    </div>
+
+    <div id="page2" class="page">
+        <h2>2. Pencarian Kode Pos Indonesia</h2>
+        <div class="form-group">
+            <label>Provinsi:</label>
+            <select id="kodeposProv" onchange="updateKota()">
+                <option value="">-- Pilih Provinsi --</option>
+                <option value="Jawa Timur">Jawa Timur</option>
+                <option value="Jawa Barat">Jawa Barat</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Kabupaten / Kota:</label>
+            <select id="kodeposKota" disabled onchange="updateKecamatan()">
+                <option value="">-- Pilih Kota --</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Kecamatan:</label>
+            <select id="kodeposKec" disabled>
+                <option value="">-- Pilih Kecamatan --</option>
+            </select>
+        </div>
+        <button class="btn-search" onclick="cariKodePos()">Cari Kode Pos</button>
+        
+        <div id="hasilKodepos" class="result-box"></div>
+        
+        <button class="btn-next" style="margin-top: 20px;" onclick="keHalaman(3)">Lanjut ke Tugas Terakhir</button>
+    </div>
+
+    <div id="page3" class="page">
+        <h2>3. List Dropdown Dinamis</h2>
+        <div class="form-group">
+            <label>Jenis Produk:</label>
+            <select id="produkJenis" onchange="updateMerk()">
+                <option value="">-- Pilih Jenis Produk --</option>
+                <option value="Desktop">Desktop</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Smartphone">Smartphone</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Merk:</label>
+            <select id="produkMerk" disabled>
+                <option value="">-- Pilih Merk --</option>
+            </select>
+        </div>
+        <button class="btn-next" style="background-color: #6c757d;" onclick="alert('Selesai')">Selesai</button>
+    </div>
+</div>
+
+<script>
+    // FUNGSI NAVIGASI
+    function keHalaman(nomor) {
+        // Validasi simpel untuk halaman 1
+        if(nomor === 2) {
+            const nama = document.getElementById('regNama').value;
+            if(!nama) { alert("Nama harus diisi!"); return; }
+        }
+
+        // Pindah Halaman
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById('page' + nomor).classList.add('active');
+
+        // Update Indikator
+        document.querySelectorAll('.step-indicator span').forEach(s => s.classList.remove('active'));
+        document.getElementById('step' + nomor + '-label').classList.add('active');
+    }
+
+    // DATA KODE POS (MOCKUP)
+    const dbWilayah = {
+        "Jawa Timur": {
+            "Surabaya": { "Sukolilo": "60111", "Gubeng": "60281" },
+            "Malang": { "Lowokwaru": "65141" }
+        },
+        "Jawa Barat": {
+            "Bandung": { "Coblong": "40132", "Andir": "40181" }
+        }
+    };
+
+    function updateKota() {
+        const prov = document.getElementById('kodeposProv').value;
+        const kotaSelect = document.getElementById('kodeposKota');
+        kotaSelect.innerHTML = '<option value="">-- Pilih Kota --</option>';
+        document.getElementById('kodeposKec').innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
+        
+        if(prov) {
+            kotaSelect.disabled = false;
+            Object.keys(dbWilayah[prov]).forEach(k => {
+                kotaSelect.options.add(new Option(k, k));
+            });
+        } else {
+            kotaSelect.disabled = true;
+        }
+    }
+
+    function updateKecamatan() {
+        const prov = document.getElementById('kodeposProv').value;
+        const kota = document.getElementById('kodeposKota').value;
+        const kecSelect = document.getElementById('kodeposKec');
+        kecSelect.innerHTML = '<option value="">-- Pilih Kecamatan --</option>';
+
+        if(kota) {
+            kecSelect.disabled = false;
+            Object.keys(dbWilayah[prov][kota]).forEach(k => {
+                kecSelect.options.add(new Option(k, k));
+            });
+        }
+    }
+
+    function cariKodePos() {
+        const prov = document.getElementById('kodeposProv').value;
+        const kota = document.getElementById('kodeposKota').value;
+        const kec = document.getElementById('kodeposKec').value;
+        const box = document.getElementById('hasilKodepos');
+
+        if(kec) {
+            const kodepos = dbWilayah[prov][kota][kec];
+            box.innerHTML = `<strong>Hasil:</strong><br>Kode Pos untuk ${kec}, ${kota} adalah <b>${kodepos}</b>`;
+            box.style.display = 'block';
+        } else {
+            alert("Pilih wilayah dengan lengkap!");
+        }
+    }
+
+    // DATA DROPDOWN PRODUK
+    const dbProduk = {
+        "Desktop": ["iMac", "Dell Optiplex", "HP Pavilion"],
+        "Laptop": ["MacBook", "Asus ROG", "Lenovo Legion"],
+        "Smartphone": ["iPhone", "Samsung S24", "Xiaomi 14"]
+    };
+
+    function updateMerk() {
+        const jenis = document.getElementById('produkJenis').value;
+        const merkSelect = document.getElementById('produkMerk');
+        merkSelect.innerHTML = '<option value="">-- Pilih Merk --</option>';
+
+        if(jenis) {
+            merkSelect.disabled = false;
+            dbProduk[jenis].forEach(m => {
+                merkSelect.options.add(new Option(m, m));
+            });
+        } else {
+            merkSelect.disabled = true;
+        }
+    }
+</script>
+
+</body>
+</html>
